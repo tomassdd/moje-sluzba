@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  mojeapi:
+    build: .
+    ports:
+      - "8081:8081"
