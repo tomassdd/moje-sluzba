@@ -1,1 +1,32 @@
-<>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AI Tip dne</title>
+</head>
+<body>
+  <h1>AI Tip dne</h1>
+
+  <input id="prompt" placeholder="Zeptej se..." style="width:300px;">
+  <button onclick="poslat()">Odeslat</button>
+
+  <p id="odpoved"></p>
+
+  <script>
+    async function poslat() {
+      const prompt = document.getElementById("prompt").value;
+
+      const res = await fetch("/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+      document.getElementById("odpoved").innerText = data.odpoved || data.error;
+    }
+  </script>
+</body>
+</html>
