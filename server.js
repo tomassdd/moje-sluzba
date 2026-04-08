@@ -25,21 +25,24 @@ app.post("/ai", async (req, res) => {
 	const prompt = req.body.prompt || "Ahoj";
 
 	try {
-		const response = await fetch("http://localhost:11434/api/generate", {
+		const response = await fetch("https://kurim.ithope.eu/v1/chat/completions", {
 		method: "POST",
 		headers: {
-		 "Content-Type": "application/json"
+		 "Content-Type": "application/json",
+		  "Authorization": "Bearer sk--doFqwqtDa8xaBYqlDJJpg"
 		},
 		body: JSON.stringify({
-		 model: "llama3.2:3b",
-		 prompt: prompt,
-		 stream: false
-		})
-	});
+    	model: "gemma3:27b",
+   		messages: [
+      	{ role: "user", content: prompt }
+    ]
+  })
+});
+		
 	const data = await response.json();
 
 	res.json({
-	 odpoved: data.response
+	 odpoved: data.choices[0].message.content
 });
 } catch (err) {
 	res.json({ error: "AI chyba" });
