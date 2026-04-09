@@ -1,5 +1,5 @@
 Název projektu:
-Moje síťová služba – AI Tip dne
+Moje síťová služba – AI chat
 
 Autor:
 Tomáš Hollý
@@ -118,5 +118,6 @@ Poznámky:
 - Projekt běží v izolované síti bez internetu
 - AI model běží lokálně na CPU
 - node_modules není součástí repozitáře (řešeno přes .gitignore)
+- veřejně dostupná verze je nyní upravená pro API uzaveřeného serveru s AI modelem gemma3:27b
 
 --------------------------------------------------
