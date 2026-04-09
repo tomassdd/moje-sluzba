@@ -1,32 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <title>Tomovo AI</title>
+  <title>Tomův úžasný AI chat</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      height: 100vh;
+    }
+
+    h1 {
+      margin: 20px;
+    }
+
+    #chat {
+      width: 90%;
+      max-width: 600px;
+      height: 70vh;
+      overflow-y: auto;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 10px;
+      background: #1e293b;
+    }
+
+    .msg {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+
+    .user {
+      background: #3b82f6;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .ai {
+      background: #22c55e;
+      align-self: flex-start;
+    }
+
+    #input-area {
+      margin-top: 10px;
+      display: flex;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px 0 0 8px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+      border-radius: 0 8px 8px 0;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Tomovo AI</h1>
 
-  <input id="prompt" placeholder="Zeptej se..." style="width:300px;">
-  <button onclick="poslat()">Odeslat</button>
+  <h1>Tom Chat</h1>
 
-  <p id="odpoved"></p>
+  <div id="chat"></div>
+
+  <div id="input-area">
+    <input id="prompt" placeholder="Napiš otázku...">
+    <button onclick="poslat()">Odeslat</button>
+  </div>
 
   <script>
+    const chat = document.getElementById("chat");
+
+    function pridejZpravu(text, typ) {
+      const div = document.createElement("div");
+      div.className = "msg " + typ;
+      div.innerText = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
     async function poslat() {
-      const prompt = document.getElementById("prompt").value;
+      const input = document.getElementById("prompt");
+      const text = input.value;
 
-      const res = await fetch("/ai", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt })
-      });
+      if (!text) return;
 
-      const data = await res.json();
-      document.getElementById("odpoved").innerText = data.odpoved || data.error;
+      pridejZpravu(text, "user");
+      input.value = "";
+
+      pridejZpravu("⏳ Přemýšlím...", "ai");
+
+      try {
+        const res = await fetch("/ai", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ prompt: text })
+        });
+
+        const data = await res.json();
+
+        chat.lastChild.remove(); 
+
+        pridejZpravu(data.odpoved || data.error, "ai");
+
+      } catch (err) {
+        chat.lastChild.remove();
+        pridejZpravu("Chyba při komunikaci se serverem", "ai");
+      }
     }
   </script>
+
 </body>
 </html>
