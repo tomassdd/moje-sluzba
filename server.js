@@ -1,3 +1,4 @@
+console.log("START SERVERU");
 const express = require("express");
 const fetch = require("node-fetch");
 const sqlite3 = require("sqlite3").verbose();
@@ -97,4 +98,7 @@ app.post("/ai", async (req, res) => {
 // ===== START =====
 app.listen(8081, "0.0.0.0", () => {
   console.log("Server běží na portu 8081");
+});
+app.get("/", (req, res) => {
+  res.send("OK");
 });
