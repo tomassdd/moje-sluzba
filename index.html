@@ -140,7 +140,7 @@ async function register() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  await fetch("/register", {
+  await fetch("fetch("https://tomass.kurim.ithope.eu/register", {", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ username, password })
@@ -173,7 +173,7 @@ async function poslat() {
   chat.appendChild(loading);
 
   try {
-    const res = await fetch("/ai", {
+    const res = await fetch("fetch("https://tomass.kurim.ithope.eu/ai", {", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
