@@ -13,6 +13,9 @@ db.run(`
 const port = 8081;
 const sqlite3 = require("sqlite3").verbose();
 
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
 
 app.use(express.json());
 app.use(express.static(__dirname));
