@@ -67,7 +67,7 @@ app.post("/ai", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + process.env.sk--doFq...JJpg
+        "Authorization": "Bearer " + process.env.sk--doFq...JJpg"
 
       },
       body: JSON.stringify({
