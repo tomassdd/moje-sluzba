@@ -1,7 +1,17 @@
 const path = require("path");
 const express = require("express");
 const app = express();
+const db = new sqlite3.Database("data.db");
+
+db.run(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    password TEXT
+  )
+`);
 const port = 8081;
+const sqlite3 = require("sqlite3").verbose();
 
 
 app.use(express.json());
@@ -17,6 +27,34 @@ app.get("/status", (req, res) => {
 		autor: "Tom",
 		cas: new Date()
 	});
+});
+
+app.post("/register", (req, res) => {
+  const { username, password } = req.body;
+
+  db.run(
+    "INSERT INTO users (username, password) VALUES (?, ?)",
+    [username, password],
+    function (err) {
+      if (err) return res.json({ error: "Chyba DB" });
+      res.json({ msg: "Registrováno" });
+    }
+  );
+});
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  db.get(
+    "SELECT * FROM users WHERE username=? AND password=?",
+    [username, password],
+    (err, row) => {
+      if (row) {
+        res.json({ msg: "OK" });
+      } else {
+        res.status(401).json({ error: "Špatné údaje" });
+      }
+    }
+  );
 });
 
 const fetch = require("node-fetch");
