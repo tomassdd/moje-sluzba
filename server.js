@@ -89,7 +89,36 @@ db.serialize(() => {
     }
   );
 });
+async function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ username, password })
+  });
+
+  if (res.ok) {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("chat").style.display = "block";
+  } else {
+    alert("Špatné údaje");
+  }
+}
+
+async function register() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  await fetch("/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ username, password })
+  });
+
+  alert("Registrováno");
+}
 app.listen(port,"0.0.0.0", () => {
 	console.log("Server bezi na portu  " + port);
 });
