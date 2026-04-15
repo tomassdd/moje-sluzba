@@ -68,11 +68,11 @@ app.post("/ai", async (req, res) => {
   const prompt = req.body.prompt || "Ahoj";
 
   try {
-    const response = await fetch(process.env.OPENAI_BASE_URL + "/chat/completions", {
+    const response = await fetch(process.env.https://kurim.ithope.eu/v1 + "/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + process.env.OPENAI_API_KEY
+        "Authorization": "Bearer " + process.env.sk--doFqwqtDa8xaBYqlDJJpg
       },
       body: JSON.stringify({
         model: "gemma3:27b",
