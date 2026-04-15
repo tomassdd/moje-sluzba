@@ -1,6 +1,6 @@
 console.log("START SERVERU");
 const express = require("express");
-const fetch = require("node-fetch");
+// žádný require fetch
 const sqlite3 = require("sqlite3").verbose();
 
 const app = express();
@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 // ===== DB =====
-const db = new sqlite3.Database("data.db");
+const db = new sqlite3.Database("/tmp/data.db");
 
 db.serialize(() => {
   db.run(`
@@ -69,12 +69,8 @@ app.post("/ai", async (req, res) => {
   const prompt = req.body.prompt || "Ahoj";
 
   try {
-    const response = await fetch(process.env.https://kurim.ithope.eu/v1 + "/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + process.env.sk--doFqwqtDa8xaBYqlDJJpg
-      },
+const BASE_URL = process.env.https://kurim.ithope.eu/v1 || "https://kurim.ithope.eu/v1";
+const API_KEY = process.env.sk--doFqwqtDa8xaBYqlDJJpg || "test";
       body: JSON.stringify({
         model: "gemma3:27b",
         messages: [
