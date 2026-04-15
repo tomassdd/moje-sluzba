@@ -2,6 +2,8 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const port = 8081;
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("data.db");
 
 
 app.use(express.json());
@@ -47,6 +49,45 @@ app.post("/ai", async (req, res) => {
 } catch (err) {
 	res.json({ error: "AI chyba" });
 }
+});
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+	
+app.post("/register", (req, res) => {
+  const { username, password } = req.body;
+	
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT,
+      password TEXT
+    )
+  `);
+});
+
+  db.run(
+    "INSERT INTO users (username, password) VALUES (?, ?)",
+    [username, password],
+    function (err) {
+      if (err) {
+        return res.json({ error: "Chyba" });
+      }
+      res.json({ msg: "OK" });
+    }
+  );
+});
+  db.get(
+    "SELECT * FROM users WHERE username=? AND password=?",
+    [username, password],
+    (err, row) => {
+      if (row) {
+        res.json({ msg: "OK" });
+      } else {
+        res.status(401).json({ error: "Špatné údaje" });
+      }
+    }
+  );
 });
 
 app.listen(port,"0.0.0.0", () => {
