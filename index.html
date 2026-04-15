@@ -2,12 +2,12 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<title>TomChat</title>
+<title>AI Chat</title>
 
 <style>
   body {
     margin: 0;
-    font-family: system-ui, Arial;
+    font-family: system-ui;
     background: linear-gradient(135deg, #0f172a, #1e293b);
     height: 100vh;
     display: flex;
@@ -16,83 +16,54 @@
   }
 
   .container {
-    width: 600px;
-    height: 700px;
+    width: 480px;
+    height: 680px;
     background: #020617;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
     overflow: hidden;
   }
 
   h1 {
-    margin: 0;
-    padding: 15px;
-    font-size: 18px;
     text-align: center;
-    background: #0f12a;
-    color: #ffff;
-    border-bottom: 1px solid #334155;
+    padding: 10px;
   }
 
   #chat {
     flex: 1;
-    display: flex;
-    flex-direction: column;
     padding: 10px;
     overflow-y: auto;
-    gap: 10px;
+    display: none;
   }
 
   .msg {
-    padding: 10px 14px;
-    border-radius: 16px;
-    max-width: 75%;
-    line-height: 1.4;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-  }
-
-  .user {
-    background: #3b82f6;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-  }
-
-  .ai {
-    background: #22c55e;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-  }
-
-  #input-area {
-    display: flex;
     padding: 10px;
-    border-top: 1px solid #334155;
+    margin: 5px;
+    border-radius: 12px;
+    max-width: 70%;
+  }
+
+  .user { background: #3b82f6; align-self: flex-end; }
+  .ai { background: #22c55e; align-self: flex-start; }
+
+  #login {
+    padding: 20px;
   }
 
   input {
-    flex: 1;
+    width: 100%;
+    margin: 5px 0;
     padding: 10px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    background: #1e293b;
-    color: white;
   }
 
   button {
-    margin-left: 8px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
     background: #3b82f6;
     color: white;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background: #2563eb;
+    border: none;
   }
 </style>
 </head>
@@ -101,11 +72,17 @@
 
 <div class="container">
 
-  <h1>TomChat</h1>
+  <div id="login">
+    <h1>Login</h1>
+    <input id="username" placeholder="username">
+    <input id="password" type="password" placeholder="password">
+    <button onclick="login()">Přihlásit</button>
+    <button onclick="register()">Registrovat</button>
+  </div>
 
   <div id="chat"></div>
 
-  <div id="input-area">
+  <div id="input" style="display:none; padding:10px;">
     <input id="prompt" placeholder="Zeptej se...">
     <button onclick="poslat()">Odeslat</button>
   </div>
@@ -115,50 +92,59 @@
 <script>
 const chat = document.getElementById("chat");
 
-function pridejZpravu(text, typ) {
+function msg(text, type) {
   const div = document.createElement("div");
-  div.className = "msg " + typ;
+  div.className = "msg " + type;
   div.innerText = text;
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
 
-async function poslat() {
-  const input = document.getElementById("prompt");
-  const text = input.value.trim();
+async function login() {
+  const username = usernameEl.value;
+  const password = passwordEl.value;
 
-  if (!text) return;
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({username,password})
+  });
 
-  pridejZpravu(text, "user");
-  input.value = "";
-
-  const loading = document.createElement("div");
-  loading.className = "msg ai";
-  loading.innerText = "⏳ Přemýšlím...";
-  chat.appendChild(loading);
-
-  try {
-    const res = await fetch("/ai", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ prompt: text })
-    });
-
-    const data = await res.json();
-    loading.remove();
-    pridejZpravu(data.odpoved || data.error, "ai");
-
-  } catch {
-    loading.remove();
-    pridejZpravu("❌ Chyba", "ai");
+  if (res.ok) {
+    loginDiv.style.display="none";
+    chat.style.display="block";
+    inputDiv.style.display="block";
+  } else {
+    alert("Chyba");
   }
 }
 
-document.getElementById("prompt").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") poslat();
-});
+async function register() {
+  const username = usernameEl.value;
+  const password = passwordEl.value;
+
+  await fetch("/register", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({username,password})
+  });
+
+  alert("Registrováno");
+}
+
+async function poslat() {
+  const text = promptEl.value;
+  msg(text,"user");
+
+  const res = await fetch("/ai", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({prompt:text})
+  });
+
+  const data = await res.json();
+  msg(data.odpoved || data.error,"ai");
+}
 </script>
 
 </body>
