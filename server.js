@@ -27,7 +27,7 @@ app.post("/ai", async (req, res) => {
 	const prompt = req.body.prompt || "Ahoj";
 
 	try {
-		const response = await fetch("https://tomass.kurim.ithope.eu//v1/chat/completions", {
+		const response = await fetch("https://kurim.ithope.eu/v1/chat/completions", {
 		method: "POST",
 		headers: {
 		 "Content-Type": "application/json",
