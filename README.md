@@ -119,5 +119,6 @@ Poznámky:
 - AI model běží lokálně na CPU
 - node_modules není součástí repozitáře (řešeno přes .gitignore)
 - veřejně dostupná verze je nyní upravená pro API uzaveřeného serveru s AI modelem gemma3:27b
+- NYNÍ BEZ DATABÁZE - zkoušel jsem přidat login a register, ale marně
 
 --------------------------------------------------
