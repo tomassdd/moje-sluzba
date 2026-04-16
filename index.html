@@ -122,7 +122,7 @@
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  const res = await fetch("https://tomass.kurim.ithope.eu/login", {
+  const res = await fetch("https://tomass.kurim.ithope.eu/api/login", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ username, password })
@@ -140,7 +140,7 @@ async function register() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  await fetch("fetch("https://tomass.kurim.ithope.eu/register", {", {
+  await fetch("fetch("https://tomass.kurim.ithope.eu/api/register", {", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ username, password })
