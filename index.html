@@ -102,13 +102,8 @@
 <div class="container">
 
   <h1>TomChat</h1>
-<div id="login">
-  <input id="username" placeholder="username">
-  <input id="password" type="password" placeholder="password">
-  <button onclick="login()">Přihlásit</button>
-  <button onclick="register()">Registrovat</button>
-</div>
-  <div id="chat" style="display:none;">
+
+  <div id="chat"></div>
 
   <div id="input-area">
     <input id="prompt" placeholder="Zeptej se...">
@@ -118,36 +113,6 @@
 </div>
 
 <script>
-  async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  const res = await fetch("https://tomass.kurim.ithope.eu/api/login", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ username, password })
-  });
-
-  if (res.ok) {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("chat").style.display = "block";
-  } else {
-    alert("Špatné údaje");
-  }
-}
-
-async function register() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  await fetch("fetch("https://tomass.kurim.ithope.eu/api/register", {", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ username, password })
-  });
-
-  alert("Registrováno");
-}
 const chat = document.getElementById("chat");
 
 function pridejZpravu(text, typ) {
@@ -173,7 +138,7 @@ async function poslat() {
   chat.appendChild(loading);
 
   try {
-    const res = await fetch("fetch("https://tomass.kurim.ithope.eu/ai", {", {
+    const res = await fetch("/ai", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
