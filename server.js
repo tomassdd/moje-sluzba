@@ -32,7 +32,7 @@ app.get("/status", (req, res) => {
 	});
 });
 
-app.post("/register", (req, res) => {
+app.post("/api/register", (req, res) => {
   const { username, password } = req.body;
 
   db.run(
@@ -44,7 +44,7 @@ app.post("/register", (req, res) => {
     }
   );
 });
-app.post("/login", (req, res) => {
+app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
   db.get(
