@@ -1,165 +1,319 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<title>TomChat</title>
+    <meta charset="UTF-8">
+    <title>TomChat</title>
 
-<style>
-  body {
-    margin: 0;
-    font-family: system-ui, Arial;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, Arial;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
 
-  .container {
-    width: 600px;
-    height: 700px;
-    background: #020617;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-    overflow: hidden;
-  }
+        .container {
+            width: 600px;
+            height: 700px;
+            background: #020617;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
 
-  h1 {
-    margin: 0;
-    padding: 15px;
-    font-size: 18px;
-    text-align: center;
-    background: #0f12a;
-    color: #ffff;
-    border-bottom: 1px solid #334155;
-  }
+        /* Hlavička aplikace */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+        }
 
-  #chat {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    overflow-y: auto;
-    gap: 10px;
-  }
+            .header-top h1 {
+                margin: 0;
+                font-size: 18px;
+                color: #fff;
+            }
 
-  .msg {
-    padding: 10px 14px;
-    border-radius: 16px;
-    max-width: 75%;
-    line-height: 1.4;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-  }
+        .logout-btn {
+            background: #ef4444;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            color: white;
+            border: none;
+        }
 
-  .user {
-    background: #3b82f6;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-  }
+        /* Auth sekce */
+        #auth-section {
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            gap: 15px;
+            text-align: center;
+            justify-content: center;
+            height: 100%;
+        }
 
-  .ai {
-    background: #22c55e;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-  }
+            #auth-section h1 {
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
 
-  #input-area {
-    display: flex;
-    padding: 10px;
-    border-top: 1px solid #334155;
-  }
+        .auth-input {
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: white;
+            outline: none;
+            font-size: 16px;
+        }
 
-  input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    background: #1e293b;
-    color: white;
-  }
+        .auth-btn {
+            padding: 14px;
+            border-radius: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
 
-  button {
-    margin-left: 8px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
-    background: #3b82f6;
-    color: white;
-    cursor: pointer;
-  }
+            .auth-btn:hover {
+                background: #2563eb;
+            }
 
-  button:hover {
-    background: #2563eb;
-  }
-</style>
+        .toggle-text {
+            color: #94a3b8;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+            .toggle-text span {
+                color: #3b82f6;
+                font-weight: bold;
+            }
+
+        #auth-msg {
+            color: #ef4444;
+            min-height: 20px;
+            font-size: 14px;
+        }
+
+        /* Chat sekce */
+        #app-section {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow-y: auto;
+            gap: 10px;
+        }
+
+        .msg {
+            padding: 10px 14px;
+            border-radius: 16px;
+            max-width: 75%;
+            line-height: 1.4;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        .user {
+            background: #3b82f6;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai {
+            background: #22c55e;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        #input-area {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #334155;
+        }
+
+        input#prompt {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: #1e293b;
+            color: white;
+        }
+
+        #input-area button {
+            margin-left: 8px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 10px;
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            #input-area button:hover {
+                background: #2563eb;
+            }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <div class="container">
+        <div id="auth-section">
+            <h1 id="auth-title">Přihlášení</h1>
+            <input class="auth-input" id="u" placeholder="Uživatelské jméno">
+            <input class="auth-input" id="p" type="password" placeholder="Heslo">
+            <button class="auth-btn" onclick="handleAuth()" id="auth-btn">Přihlásit se</button>
+            <p class="toggle-text" onclick="toggleAuth()" id="auth-toggle">Nemáte účet? <span>Registrovat se</span></p>
+            <div id="auth-msg"></div>
+        </div>
 
-  <h1>TomChat</h1>
+        <div id="app-section">
+            <div class="header-top">
+                <h1>TomChat</h1>
+                <button class="logout-btn" onclick="logout()">Odhlásit</button>
+            </div>
+            <div id="chat"></div>
+            <div id="input-area">
+                <input id="prompt" placeholder="Zeptej se...">
+                <button onclick="poslat()">Odeslat</button>
+            </div>
+        </div>
+    </div>
 
-  <div id="chat"></div>
+    <script>
+        let mode = 'login';
+        const authSec = document.getElementById('auth-section');
+        const appSec = document.getElementById('app-section');
+        const authMsg = document.getElementById('auth-msg');
+        const chat = document.getElementById("chat");
 
-  <div id="input-area">
-    <input id="prompt" placeholder="Zeptej se...">
-    <button onclick="poslat()">Odeslat</button>
-  </div>
+        window.onload = () => {
+            if (localStorage.getItem('token')) {
+                authSec.style.display = 'none';
+                appSec.style.display = 'flex';
+            }
+        };
 
-</div>
+        function toggleAuth() {
+            mode = mode === 'login' ? 'reg' : 'login';
+            document.getElementById('auth-title').innerText = mode === 'login' ? 'Přihlášení' : 'Nová registrace';
+            document.getElementById('auth-btn').innerText = mode === 'login' ? 'Přihlásit se' : 'Vytvořit účet';
+            document.getElementById('auth-toggle').innerHTML = mode === 'login' ? 'Nemáte účet? <span>Registrovat se</span>' : 'Máte účet? <span>Přihlaste se</span>';
+            authMsg.innerText = "";
+            authMsg.style.color = "#ef4444";
+        }
 
-<script>
-const chat = document.getElementById("chat");
+        async function handleAuth() {
+            const u = document.getElementById('u').value;
+            const p = document.getElementById('p').value;
+            const url = mode === 'login' ? '/token' : '/register';
 
-function pridejZpravu(text, typ) {
-  const div = document.createElement("div");
-  div.className = "msg " + typ;
-  div.innerText = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
 
-async function poslat() {
-  const input = document.getElementById("prompt");
-  const text = input.value.trim();
+                if (res.ok) {
+                    if (mode === 'login') {
+                        localStorage.setItem('token', data.access_token);
+                        location.reload();
+                    } else {
+                        authMsg.style.color = "#22c55e";
+                        authMsg.innerText = "✅ Registrace úspěšná, přihlaste se.";
+                        setTimeout(toggleAuth, 1500);
+                    }
+                } else {
+                    authMsg.style.color = "#ef4444";
+                    authMsg.innerText = "❌ " + data.error;
+                }
+            } catch (e) {
+                authMsg.innerText = "❌ Chyba serveru.";
+            }
+        }
 
-  if (!text) return;
+        function logout() {
+            localStorage.removeItem('token');
+            location.reload();
+        }
 
-  pridejZpravu(text, "user");
-  input.value = "";
+        function pridejZpravu(text, typ) {
+            const div = document.createElement("div");
+            div.className = "msg " + typ;
+            div.innerText = text;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
 
-  const loading = document.createElement("div");
-  loading.className = "msg ai";
-  loading.innerText = "⏳ Přemýšlím...";
-  chat.appendChild(loading);
+        async function poslat() {
+            const input = document.getElementById("prompt");
+            const text = input.value.trim();
+            if (!text) return;
 
-  try {
-    const res = await fetch("/ai", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ prompt: text })
-    });
+            pridejZpravu(text, "user");
+            input.value = "";
 
-    const data = await res.json();
-    loading.remove();
-    pridejZpravu(data.odpoved || data.error, "ai");
+            const loading = document.createElement("div");
+            loading.className = "msg ai";
+            loading.innerText = "⏳ Přemýšlím...";
+            chat.appendChild(loading);
 
-  } catch {
-    loading.remove();
-    pridejZpravu("❌ Chyba", "ai");
-  }
-}
+            try {
+                const res = await fetch("/ai", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem('token') // Odesíláme token z localStorage
+                    },
+                    body: JSON.stringify({ prompt: text })
+                });
 
-document.getElementById("prompt").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") poslat();
-});
-</script>
+                if (res.status === 401 || res.status === 403) {
+                    logout();
+                    return;
+                }
+
+                const data = await res.json();
+                loading.remove();
+                pridejZpravu(data.odpoved || data.error, "ai");
+
+            } catch {
+                loading.remove();
+                pridejZpravu("❌ Chyba spojení", "ai");
+            }
+        }
+
+        document.getElementById("prompt").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") poslat();
+        });
+    </script>
 
 </body>
 </html>
